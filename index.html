@@ -8,7 +8,7 @@
 <!-- ============ OPEN GRAPH / SOCIAL SHARING PREVIEW ============ -->
 <meta property="og:title" content="JD Shultz Gallery · Foundation Partnership">
 <meta property="og:description" content="Turn fine art into real funding. A LA gallery partnership for foundations. $250K+ raised for 25+ charitable causes.">
-<meta property="og:image" content="https://jdshultzart.github.io/fundraising-proposal/thumbnail.jpg?v=2">
+<meta property="og:image" content="https://jdshultzart.github.io/fundraising-proposal/thumbnail.jpg?v=5">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/jpeg">
@@ -21,7 +21,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="JD Shultz Gallery · Foundation Partnership">
 <meta name="twitter:description" content="Turn fine art into real funding. A LA gallery partnership for foundations. $250K+ raised for 25+ charitable causes.">
-<meta name="twitter:image" content="https://jdshultzart.github.io/fundraising-proposal/thumbnail.jpg?v=2">
+<meta name="twitter:image" content="https://jdshultzart.github.io/fundraising-proposal/thumbnail.jpg?v=5">
 <meta name="twitter:image:alt" content="JD Shultz Gallery, Los Angeles. Turn fine art into real funding.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -238,6 +238,7 @@ em.gold-light{font-style:italic;color:var(--gold-light);font-weight:500}
   font-family:var(--sans);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
   color:var(--ink-3);font-weight:600;
 }
+.s-collector-wide{grid-column:1 / -1}
 .s-collectors-corp{
   text-align:center;padding-top:24px;border-top:1px solid var(--line);
 }
@@ -250,9 +251,11 @@ em.gold-light{font-style:italic;color:var(--gold-light);font-weight:500}
 .s-collectors-corp-list{
   font-family:var(--serif);font-style:italic;font-size:clamp(18px,1.5vw,23px);color:var(--ink);
   line-height:1.5;font-weight:500;
+  /* flex gives a wrap point between names; nowrap spans keep each name whole */
+  display:flex;flex-wrap:wrap;justify-content:center;row-gap:2px;
 }
-.s-collectors-corp-list span{padding:0 12px;position:relative}
-.s-collectors-corp-list span:not(:last-child)::after{content:'·';color:var(--gold);position:absolute;right:-4px}
+.s-collectors-corp-list span{white-space:nowrap}
+.s-collectors-corp-list span:not(:last-child)::after{content:'·';color:var(--gold);margin:0 12px}
 
 /* ============ SLIDE 03 — CHARITY ROSTER ============ */
 .s-charity{background:var(--bg-warm)}
@@ -488,36 +491,49 @@ em.gold-light{font-style:italic;color:var(--gold-light);font-weight:500}
 
 /* ============ RESPONSIVE ============ */
 @media (max-width:900px) and (orientation:portrait){
-  html,body{overflow:hidden;height:100%;margin:0}
-  body{display:block;background:#fff;height:100vh;height:100dvh}
-  .deck{
-    height:100vh;height:100dvh;
-    display:block;padding:0;margin:0;
-    overflow-y:auto;
-    scroll-snap-type:y mandatory;
-    -webkit-overflow-scrolling:touch;
-    scroll-behavior:smooth;
-  }
+  html,body{overflow-x:hidden;overflow-y:auto;height:auto;margin:0;-webkit-overflow-scrolling:touch}
+  body{display:block;background:#fff;height:auto;min-height:100dvh}
+  .deck{height:auto;display:block;padding:0;margin:0;overflow:visible}
   .slide-frame{width:100%;aspect-ratio:auto;box-shadow:none;height:auto;display:block}
   .slide{
-    display:flex !important;opacity:1 !important;position:relative;
-    height:100vh;height:100dvh;min-height:100vh;min-height:100dvh;
+    display:none;opacity:1 !important;position:relative;
+    height:auto;min-height:100dvh;
     width:100%;
-    scroll-snap-align:start;scroll-snap-stop:always;
     flex-direction:column;
-    overflow:hidden;
-    border-bottom:1px solid var(--line);
+    overflow:visible;
+    padding-bottom:76px;              /* clears the fixed nav bar */
+    border-bottom:none;
   }
-  .nav{display:none}
+  .slide.active{display:flex !important}
+
+  /* full-width bottom nav bar, thumb-reachable */
+  .nav{
+    display:flex;bottom:0;left:0;right:0;top:auto;
+    transform:none;width:100%;border-radius:0;
+    padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    justify-content:space-between;gap:10px;
+    border-left:none;border-right:none;border-bottom:none;
+  }
+  .nav-btn{width:auto;height:44px;border-radius:4px;padding:0 22px;font-size:12px;
+    letter-spacing:.16em;text-transform:uppercase;font-weight:600;flex:0 0 auto}
+  .nav-btn:disabled{opacity:.28}
+  .nav-counter{flex:1 1 auto;min-width:0;font-size:12px}
+  .nav-home{display:none}
+  /* spell the buttons out on mobile: an arrow alone reads as ambiguous */
+  #prev,#next{font-size:0}
+  #prev::after,#next::after{font-size:12px;letter-spacing:.16em}
+  #prev::after{content:"\2190  BACK"}
+  #next::after{content:"NEXT  \2192"}
+  #next{background:var(--gold-light);color:#0a0a0a;font-weight:700}
+  #next:disabled{background:rgba(255,255,255,.1);color:#fff;font-weight:600}
   .chrome-top,.chrome-bot{padding:14px 24px;height:auto;position:relative;flex-shrink:0}
   .slide-body{
     position:relative;top:auto;bottom:auto;
-    padding:28px 24px 64px !important;
+    padding:28px 24px 32px !important;
     display:block !important;
     grid-template-columns:1fr !important;
-    flex:1;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
+    flex:1 0 auto;
+    overflow:visible;
   }
   .s-hero-left,.s-room-text,.s-quote-text,.s-scholarship-text{padding:32px 24px}
   .s-hero-art,.s-letter-art{aspect-ratio:4/5;margin-top:24px;max-height:none;height:auto}
@@ -637,21 +653,22 @@ img.img-missing{
         <div class="s-collectors-grid">
           <div class="s-collector"><div class="s-collector-name">Kobe Bryant</div><div class="s-collector-tag">NBA Hall of Fame</div></div>
           <div class="s-collector"><div class="s-collector-name">Gal Gadot</div><div class="s-collector-tag">Actress</div></div>
-          <div class="s-collector"><div class="s-collector-name">Will Smith</div><div class="s-collector-tag">Actor / Musician</div></div>
+          <div class="s-collector"><div class="s-collector-name">Geddy Lee</div><div class="s-collector-tag">Musician "Rush"</div></div>
           <div class="s-collector"><div class="s-collector-name">Larry King</div><div class="s-collector-tag">Broadcaster</div></div>
           <div class="s-collector"><div class="s-collector-name">Ryan Seacrest</div><div class="s-collector-tag">Producer / Host</div></div>
           <div class="s-collector"><div class="s-collector-name">Barry Manilow</div><div class="s-collector-tag">Singer</div></div>
           <div class="s-collector"><div class="s-collector-name">Alanis Morissette</div><div class="s-collector-tag">Recording Artist</div></div>
           <div class="s-collector"><div class="s-collector-name">Mario Lopez</div><div class="s-collector-tag">Television Host</div></div>
-          <div class="s-collector"><div class="s-collector-name">Steve Young</div><div class="s-collector-tag">NFL Hall of Fame</div></div>
+          <div class="s-collector"><div class="s-collector-name">Mike Tyson</div><div class="s-collector-tag">Boxer</div></div>
           <div class="s-collector"><div class="s-collector-name">Dr. Drew Pinsky</div><div class="s-collector-tag">Physician / Media</div></div>
-          <div class="s-collector"><div class="s-collector-name">Ric Ocasek</div><div class="s-collector-tag">The Cars</div></div>
+          <div class="s-collector"><div class="s-collector-name">Ric Ocasek</div><div class="s-collector-tag">Musician "The Cars"</div></div>
           <div class="s-collector"><div class="s-collector-name">Steve Jones</div><div class="s-collector-tag">Sex Pistols</div></div>
+          <div class="s-collector s-collector-wide"><div class="s-collector-name">Guitar Center</div><div class="s-collector-tag">Corporate Collection</div></div>
         </div>
         <div class="s-collectors-corp">
           <div class="s-collectors-corp-label">Corporate Clients</div>
           <div class="s-collectors-corp-list">
-            <span>MGM Resorts International</span><span>Four Seasons Hotels</span><span>The Bellagio</span><span>Aria</span><span>Guitar Center</span><span>Bryant & Stibel</span><span>Canter's Deli</span>
+            <span>MGM Resorts International</span><span>Four Seasons Hotels</span><span>The Bellagio</span><span>Aria</span><span>Guitar Center</span><span>Bryant &amp; Stibel</span><span>Canter's Deli</span><span>CenterStaging Studios</span>
           </div>
         </div>
       </div>
@@ -1088,6 +1105,13 @@ img.img-missing{
 </div>
 
 <script>
+/* keep the top of each new slide in view when navigating */
+function resetScroll(){
+  window.scrollTo(0,0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+}
+
 const slides = document.querySelectorAll('.slide');
 const cur = document.getElementById('cur');
 const prevBtn = document.getElementById('prev');
@@ -1102,6 +1126,8 @@ function goTo(i){
   cur.textContent = idx + 1;
   prevBtn.disabled = idx === 0;
   nextBtn.disabled = idx === slides.length - 1;
+  resetScroll();
+  requestAnimationFrame(resetScroll);   // again after reflow settles
 }
 
 prevBtn.addEventListener('click', () => goTo(idx - 1));
@@ -1115,58 +1141,22 @@ document.addEventListener('keydown', (e) => {
   if(e.key === 'End') { e.preventDefault(); goTo(slides.length - 1); }
 });
 
-let touchX = 0;
-document.addEventListener('touchstart', (e) => { touchX = e.changedTouches[0].screenX; });
+let touchX = 0, touchY = 0;
+document.addEventListener('touchstart', (e) => {
+  touchX = e.changedTouches[0].screenX;
+  touchY = e.changedTouches[0].screenY;
+}, {passive:true});
 document.addEventListener('touchend', (e) => {
   const dx = e.changedTouches[0].screenX - touchX;
-  if(Math.abs(dx) > 60) { goTo(idx + (dx < 0 ? 1 : -1)); }
-});
+  const dy = e.changedTouches[0].screenY - touchY;
+  // only a clearly horizontal swipe changes slides, so vertical reading is never interrupted
+  if(Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5){
+    goTo(idx + (dx < 0 ? 1 : -1));
+  }
+}, {passive:true});
 
 goTo(0);
 
-/* ============ MOBILE ENHANCEMENTS ============ */
-const isMobile = () => window.matchMedia('(max-width:900px) and (orientation:portrait)').matches;
-
-if(isMobile()){
-  // inject "tap to continue" indicator on every slide
-  slides.forEach((slide, i) => {
-    if(i < slides.length - 1){
-      const tap = document.createElement('div');
-      tap.className = 'tap-next';
-      tap.textContent = 'Swipe or tap';
-      slide.appendChild(tap);
-    }
-  });
-
-  // inject mobile page counter
-  const counter = document.createElement('div');
-  counter.className = 'mobile-counter';
-  counter.innerHTML = '<span id="mcur">1</span> / ' + slides.length;
-  document.body.appendChild(counter);
-  const mcur = document.getElementById('mcur');
-
-  // track which slide is in view via scroll-snap
-  const deck = document.querySelector('.deck');
-  const updateCounter = () => {
-    const slideHeight = window.innerHeight;
-    const i = Math.round(deck.scrollTop / slideHeight);
-    if(i >= 0 && i < slides.length){
-      mcur.textContent = i + 1;
-    }
-  };
-  deck.addEventListener('scroll', updateCounter, {passive:true});
-
-  // tap anywhere on a slide (not buttons/links) to advance
-  slides.forEach((slide, i) => {
-    slide.addEventListener('click', (e) => {
-      if(e.target.closest('a, button')) return;
-      if(i < slides.length - 1){
-        const next = slides[i + 1];
-        next.scrollIntoView({behavior:'smooth', block:'start'});
-      }
-    });
-  });
-}
 </script>
 
 </body>
