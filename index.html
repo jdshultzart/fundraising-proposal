@@ -238,7 +238,28 @@ em.gold-light{font-style:italic;color:var(--gold-light);font-weight:500}
   font-family:var(--sans);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
   color:var(--ink-3);font-weight:600;
 }
+/* paired photos: full column width, natural height, never cropped */
+.s-photopair{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;
+  margin:26px 0 0;
+}
+.s-photopair figure{margin:0;text-align:center}
+.s-photopair img{
+  /* capped height keeps a portrait shot from blowing out the slide,
+     while max-width + auto sizing means nothing is ever cropped */
+  max-width:100%;max-height:270px;width:auto;height:auto;
+  display:block;margin:0 auto;
+  border:1px solid var(--line);background:#f2eee2;
+}
+.s-photopair figcaption{
+  font-family:var(--sans);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600;margin-top:8px;line-height:1.5;
+}
 .s-collector-wide{grid-column:span 3}
+/* if a celebrity photo hasn't been uploaded yet, the slot vanishes cleanly
+   rather than showing a broken frame to a foundation partner */
+.s-photopair img.img-missing{display:none}
+.s-photopair figure:has(img.img-missing){display:none}
 .s-collectors-corp{
   text-align:center;padding-top:24px;border-top:1px solid var(--line);
 }
@@ -562,6 +583,8 @@ em.gold-light{font-style:italic;color:var(--gold-light);font-weight:500}
   .s-collectors .slide-body,.s-charity .slide-body,.s-testimonials .slide-body,.s-events .slide-body,.s-value .slide-body,.s-process .slide-body,.s-cta .slide-body,.s-showcase .slide-body{padding:32px 24px 64px !important}
   .s-collectors-grid{grid-template-columns:1fr 1fr}
   .s-collector-wide{grid-column:auto}
+  .s-photopair{grid-template-columns:1fr;gap:14px;margin-top:20px}
+  .s-photopair img{max-height:none;width:100%}
   .s-charity-grid{columns:1}
   .s-testimonials-grid{grid-template-columns:1fr;gap:18px}
   .s-showcase-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,1fr);aspect-ratio:1}
@@ -687,6 +710,7 @@ img.img-missing{
           <div class="s-collector s-collector-wide"><div class="s-collector-name">Guitar Center</div><div class="s-collector-tag">Corporate Collection</div></div>
           <div class="s-collector s-collector-wide"><div class="s-collector-name">CenterStaging Studios</div><div class="s-collector-tag">Corporate Collection</div></div>
         </div>
+        <div class="s-photopair"><figure><img src="images/celeb-1.jpg" alt=""></figure><figure><img src="images/celeb-2.jpg" alt=""></figure></div>
         <div class="s-collectors-corp">
           <div class="s-collectors-corp-label">Corporate Clients</div>
           <div class="s-collectors-corp-list">
@@ -710,11 +734,11 @@ img.img-missing{
         <div class="s-charity-head">
           <div class="eyebrow">A Proven Philanthropic Track Record</div>
           <h2>Already partnered with <em>the organizations that matter.</em></h2>
-          <p>Over four decades, JD's artwork has been auctioned and sold at fundraising events for these organizations — and many more. Your foundation joins serious company.</p>
+          <p>For over 20 years, JD's artwork has been auctioned and sold at fundraising events for these organizations, and many more. Your foundation joins serious company.</p>
         </div>
         <div class="s-charity-grid">
           <div class="s-charity-item">The Grammy's / MusiCares Foundation</div>
-          <div class="s-charity-item">The Guitar Center Foundation</div>
+          <div class="s-charity-item">The Guitar Center Music Foundation</div>
           <div class="s-charity-item">The City of Hope</div>
           <div class="s-charity-item">The American Heart Association</div>
           <div class="s-charity-item">Barbra Streisand's Women's Heart Disease Foundation</div>
@@ -737,6 +761,7 @@ img.img-missing{
           <div class="s-charity-item">The Foundation for Las Virgenes Schools</div>
           <div class="s-charity-item">Fairfax High School Alumni Association</div>
         </div>
+        <div class="s-photopair"><figure><img src="images/celeb-3.jpg" alt=""></figure><figure><img src="images/celeb-4.jpg" alt=""></figure></div>
         <div class="s-charity-foot">MusiCares honorees include <strong>Bruce Springsteen · Paul McCartney · Barbra Streisand · Neil Young · Aretha Franklin · James Taylor</strong></div>
       </div>
       <div class="chrome-bot">
@@ -822,7 +847,7 @@ img.img-missing{
         <div class="s-showcase-head">
           <div class="eyebrow">A Forty-Year Body of Work</div>
           <h2>Original art, <em>ready for the wall.</em></h2>
-          <p>Acrylics on plexiglas, canvas, metal, and wood. JD paints various things — from cityscapes, to abstracts, to pop art.</p>
+          <p>Acrylics on Plexiglas, canvas, metal, and wood. JD paints a wide variety of themes and styles.</p>
         </div>
         <div class="s-showcase-grid">
           <div><img src="images/image-2.jpg" alt="A Tiger at Heart" decoding="async" onerror="this.classList.add('img-missing')"></div>
