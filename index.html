@@ -238,7 +238,7 @@ em.gold-light{font-style:italic;color:var(--gold-light);font-weight:500}
   font-family:var(--sans);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
   color:var(--ink-3);font-weight:600;
 }
-.s-collector-wide{grid-column:1 / -1}
+.s-collector-wide{grid-column:span 3}
 .s-collectors-corp{
   text-align:center;padding-top:24px;border-top:1px solid var(--line);
 }
@@ -526,6 +526,26 @@ em.gold-light{font-style:italic;color:var(--gold-light);font-weight:500}
   #next::after{content:"NEXT  \2192"}
   #next{background:var(--gold-light);color:#0a0a0a;font-weight:700}
   #next:disabled{background:rgba(255,255,255,.1);color:#fff;font-weight:600}
+
+  /* scroll affordance: only shown when the slide actually has content below the fold */
+  .scroll-cue{
+    position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));
+    z-index:60;display:none;align-items:center;gap:9px;
+    font-family:var(--sans);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+    font-weight:700;color:#0a0a0a;background:var(--gold-light);
+    padding:10px 18px;border-radius:100px;pointer-events:none;
+    box-shadow:0 8px 22px rgba(0,0,0,.28);
+    transform:translateX(-50%);
+    animation:cueBob 1.9s ease-in-out infinite;
+  }
+  .scroll-cue::after{content:"\2193";font-size:13px;letter-spacing:0}
+  body.has-more .scroll-cue{display:flex}
+  /* Next stays tappable but reads as secondary until they've seen the whole slide */
+  body.has-more #next{background:rgba(255,255,255,.12);color:rgba(255,255,255,.5);box-shadow:none}
+  @keyframes cueBob{
+    0%,100%{transform:translateX(-50%) translateY(0)}
+    50%{transform:translateX(-50%) translateY(5px)}
+  }
   .chrome-top,.chrome-bot{padding:14px 24px;height:auto;position:relative;flex-shrink:0}
   .slide-body{
     position:relative;top:auto;bottom:auto;
@@ -541,6 +561,7 @@ em.gold-light{font-style:italic;color:var(--gold-light);font-weight:500}
   .s-quote-art{aspect-ratio:4/3;padding:20px}
   .s-collectors .slide-body,.s-charity .slide-body,.s-testimonials .slide-body,.s-events .slide-body,.s-value .slide-body,.s-process .slide-body,.s-cta .slide-body,.s-showcase .slide-body{padding:32px 24px 64px !important}
   .s-collectors-grid{grid-template-columns:1fr 1fr}
+  .s-collector-wide{grid-column:auto}
   .s-charity-grid{columns:1}
   .s-testimonials-grid{grid-template-columns:1fr;gap:18px}
   .s-showcase-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,1fr);aspect-ratio:1}
@@ -585,7 +606,7 @@ em.gold-light{font-style:italic;color:var(--gold-light);font-weight:500}
   }
 }
 @media (min-width:901px){
-  .tap-next,.mobile-counter{display:none}
+  .tap-next,.mobile-counter,.scroll-cue{display:none}
 }
 
 /* flags an image that failed to load from images/ */
@@ -652,6 +673,7 @@ img.img-missing{
         </div>
         <div class="s-collectors-grid">
           <div class="s-collector"><div class="s-collector-name">Kobe Bryant</div><div class="s-collector-tag">NBA Hall of Fame</div></div>
+          <div class="s-collector"><div class="s-collector-name">Mike Tyson</div><div class="s-collector-tag">Boxer</div></div>
           <div class="s-collector"><div class="s-collector-name">Gal Gadot</div><div class="s-collector-tag">Actress</div></div>
           <div class="s-collector"><div class="s-collector-name">Geddy Lee</div><div class="s-collector-tag">Musician "Rush"</div></div>
           <div class="s-collector"><div class="s-collector-name">Larry King</div><div class="s-collector-tag">Broadcaster</div></div>
@@ -659,11 +681,11 @@ img.img-missing{
           <div class="s-collector"><div class="s-collector-name">Barry Manilow</div><div class="s-collector-tag">Singer</div></div>
           <div class="s-collector"><div class="s-collector-name">Alanis Morissette</div><div class="s-collector-tag">Recording Artist</div></div>
           <div class="s-collector"><div class="s-collector-name">Mario Lopez</div><div class="s-collector-tag">Television Host</div></div>
-          <div class="s-collector"><div class="s-collector-name">Mike Tyson</div><div class="s-collector-tag">Boxer</div></div>
           <div class="s-collector"><div class="s-collector-name">Dr. Drew Pinsky</div><div class="s-collector-tag">Physician / Media</div></div>
           <div class="s-collector"><div class="s-collector-name">Ric Ocasek</div><div class="s-collector-tag">Musician "The Cars"</div></div>
           <div class="s-collector"><div class="s-collector-name">Steve Jones</div><div class="s-collector-tag">Sex Pistols</div></div>
           <div class="s-collector s-collector-wide"><div class="s-collector-name">Guitar Center</div><div class="s-collector-tag">Corporate Collection</div></div>
+          <div class="s-collector s-collector-wide"><div class="s-collector-name">CenterStaging Studios</div><div class="s-collector-tag">Corporate Collection</div></div>
         </div>
         <div class="s-collectors-corp">
           <div class="s-collectors-corp-label">Corporate Clients</div>
@@ -1097,6 +1119,7 @@ img.img-missing{
   </div>
 </div>
 
+<div class="scroll-cue" id="scrollCue" aria-hidden="true">Scroll for more</div>
 <div class="nav">
   <button class="nav-btn" id="prev" aria-label="Previous">←</button>
   <div class="nav-counter"><span id="cur">1</span><span class="total"> / 15</span></div>
@@ -1111,6 +1134,22 @@ function resetScroll(){
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
 }
+
+/* Show a scroll cue whenever the active slide has content below the fold,
+   and clear it once the reader reaches the bottom. */
+const isPhone = () => window.matchMedia('(max-width:900px) and (orientation:portrait)').matches;
+function updateScrollCue(){
+  if(!isPhone()){ document.body.classList.remove('has-more'); return; }
+  const doc = document.documentElement;
+  const max = doc.scrollHeight - window.innerHeight;
+  const y   = window.scrollY || doc.scrollTop || 0;
+  // 24px ignores sub-pixel rounding; 48px counts "near the bottom" as arrived
+  document.body.classList.toggle('has-more', max > 24 && y < max - 48);
+}
+window.addEventListener('scroll', updateScrollCue, {passive:true});
+window.addEventListener('resize', updateScrollCue);
+// images change slide height after paint, so re-measure once they land
+window.addEventListener('load', () => { updateScrollCue(); setTimeout(updateScrollCue,400); });
 
 const slides = document.querySelectorAll('.slide');
 const cur = document.getElementById('cur');
@@ -1127,7 +1166,8 @@ function goTo(i){
   prevBtn.disabled = idx === 0;
   nextBtn.disabled = idx === slides.length - 1;
   resetScroll();
-  requestAnimationFrame(resetScroll);   // again after reflow settles
+  requestAnimationFrame(() => { resetScroll(); updateScrollCue(); });
+  setTimeout(updateScrollCue, 250);     // after images/layout settle
 }
 
 prevBtn.addEventListener('click', () => goTo(idx - 1));
@@ -1156,6 +1196,7 @@ document.addEventListener('touchend', (e) => {
 }, {passive:true});
 
 goTo(0);
+updateScrollCue();
 
 </script>
 
