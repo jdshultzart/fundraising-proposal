@@ -593,7 +593,15 @@ em.gold-light{font-style:italic;color:var(--gold-light);font-weight:500}
   .s-photostack img{height:auto;object-fit:fill}
   .s-charity-grid{columns:1}
   .s-testimonials-grid{grid-template-columns:1fr;gap:18px}
-  .s-showcase-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,1fr);aspect-ratio:1}
+  /* one piece per row at full width: the square 4-row grid squeezed every
+     image down to about a third of the space actually available */
+  .s-showcase-grid{
+    grid-template-columns:1fr;grid-template-rows:none;
+    aspect-ratio:auto;gap:18px;
+  }
+  .s-showcase-grid img{
+    width:100%;height:auto;max-height:none;object-fit:contain;
+  }
   .s-room-pair-grid{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
   .s-events-grid{grid-template-columns:1fr}
   .s-events .slide-body{grid-template-columns:1fr !important}
